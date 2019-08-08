@@ -1,6 +1,6 @@
-const Koa = require('koa');
-const Router = require('koa-router');
-const TmtWechat = require('../../');
+import Koa = require('koa');
+import Router = require('koa-router');
+import TmtWechat = require('../../');
 
 const app = new Koa();
 const router = new Router();

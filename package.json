@@ -10,6 +10,8 @@
     "typescript": "^3.5.3"
   },
   "devDependencies": {
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0",
     "yargs-parser": "^13.1.1"
   },
   "scripts": {

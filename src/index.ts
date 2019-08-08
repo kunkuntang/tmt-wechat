@@ -1,6 +1,7 @@
 "use strict";
 import { post, get, http } from './utils/http';
 import { TwtMenu } from './lib/menu';
+import { TwtWeb } from './lib/web';
 
 interface IOption {
     appId: string;
@@ -16,9 +17,9 @@ interface IAcTokenResultSucc {
     expires_in?: number;
 }
 
-interface IAcTokenResultErr {
-    errcode?: -1 | 0 | 40001 | 40002 | 40013 | 40164;
-    errmsg?: string;
+export interface ICommonResultErr {
+    errcode: number;
+    errmsg: string;
 }
 
 export interface ICommonResult<T> {
@@ -48,6 +49,7 @@ export class TmtWechat {
     private accessToken = '';
     private accessExpire = 0;
     static menu = new TwtMenu();
+    static web = new TwtWeb();
 
     constructor(option: IOption) {
         this.appId = option.appId || '';
@@ -86,7 +88,7 @@ export class TmtWechat {
                 }
             }).then((res) => {
                 if (res.status === 200) {
-                    const result: IAcTokenResultSucc & IAcTokenResultErr = res.data;
+                    const result: IAcTokenResultSucc & ICommonResultErr = res.data;
                     // @ts-ignore
                     let msg = AcTokenEnum['_' + AcTokenEnum[result.errcode || 0]];
                     if (result.errcode) {

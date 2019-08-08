@@ -1,4 +1,5 @@
 import { TwtMenu } from './lib/menu';
+import { TwtWeb } from './lib/web';
 interface IOption {
     appId: string;
     appSecret: string;
@@ -8,6 +9,10 @@ interface IOption {
 interface IAcTokenResultSucc {
     access_token?: string;
     expires_in?: number;
+}
+export interface ICommonResultErr {
+    errcode: number;
+    errmsg: string;
 }
 export interface ICommonResult<T> {
     msg: string;
@@ -20,6 +25,7 @@ export declare class TmtWechat {
     private accessToken;
     private accessExpire;
     static menu: TwtMenu;
+    static web: TwtWeb;
     constructor(option: IOption);
     private _checkValid;
     /** 获取用户的AccessTooken */

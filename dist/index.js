@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = require("./utils/http");
 const menu_1 = require("./lib/menu");
+const web_1 = require("./lib/web");
 var AcTokenEnum;
 (function (AcTokenEnum) {
     AcTokenEnum[AcTokenEnum["SYSBUSY"] = -1] = "SYSBUSY";
@@ -89,6 +90,7 @@ class TmtWechat {
     }
 }
 TmtWechat.menu = new menu_1.TwtMenu();
+TmtWechat.web = new web_1.TwtWeb();
 exports.TmtWechat = TmtWechat;
 module.exports = TmtWechat;
 // Allow use of default import syntax in TypeScript

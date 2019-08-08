@@ -1,4 +1,11 @@
-import { ICommonResult } from "src";
+/**
+ * 这个关于微信公众号菜单的SDK
+ * @Author: kuntang@163.com
+ * @Date: 2019-08-08 01:31:17
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2019-08-08 09:56:08
+ */
+import { ICommonResult, ICommonResultErr } from "src";
 interface IOption {
     accessToken: string;
 }
@@ -93,16 +100,12 @@ interface ISubMenuOptions {
 interface IMenuOptions {
     button: Array<ISubMenuOptions | IMenuItemOptions>;
 }
-interface ICreateMenuRes {
-    errcode: number;
-    errmsg: string;
-}
 export declare class TwtMenu {
     private _accessToken;
     constructor(options?: IOption);
     private _checkValid;
     setMenuAccessToken(accessToken: string): void;
-    createMenu(menuOptions: IMenuOptions): Promise<ICommonResult<ICreateMenuRes>>;
+    createMenu(menuOptions: IMenuOptions): Promise<ICommonResult<ICommonResultErr>>;
 }
 export {};
 //# sourceMappingURL=menu.d.ts.map

@@ -3,11 +3,11 @@
  * @Author: kuntang@163.com 
  * @Date: 2019-08-08 01:31:17 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2019-08-08 01:32:05
+ * @Last Modified time: 2019-08-08 22:23:00
  */
 
 import { post } from "../utils/http";
-import { ICommonResult } from "src";
+import { ICommonResult, ICommonResultErr } from "src";
 
 interface IOption {
   accessToken: string;
@@ -111,11 +111,6 @@ interface IMenuOptions {
   button: Array<ISubMenuOptions | IMenuItemOptions>;
 }
 
-interface ICreateMenuRes {
-  errcode: number;
-  errmsg: string;
-}
-
 export class TwtMenu {
   private _accessToken = '';
 
@@ -138,7 +133,7 @@ export class TwtMenu {
     this._accessToken = accessToken || '';
   }
 
-  createMenu(menuOptions: IMenuOptions): Promise<ICommonResult<ICreateMenuRes>> {
+  createMenu(menuOptions: IMenuOptions): Promise<ICommonResult<ICommonResultErr>> {
     const createUrl = `https://api.weixin.qq.com/cgi-bin/menu/create?access_token=${this._accessToken}`
     return new Promise(resolve => {
       if (!this._checkValid()) {
@@ -151,7 +146,7 @@ export class TwtMenu {
       };
       post(createUrl, menuOptions).then(res => {
         if (res.status === 200) {
-          const result:ICreateMenuRes = res.data
+          const result:ICommonResultErr = res.data
           if (result.errcode === 0) {
             return resolve({
               msg: '创建成功！',
