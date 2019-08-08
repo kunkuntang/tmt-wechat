@@ -1,4 +1,5 @@
-const TmtWechat = require('../')
+import { TmtWechat } from "src";
+import { MenuBtnTypeEnum } from '../src/lib/menu'
 
 const tmcWct = new TmtWechat({
   appId: 'wx7eb04cc84eb21896',
@@ -11,7 +12,8 @@ tmcWct.getAcToken().then(res => {
 
 TmtWechat.menu.createMenu({
   button: [{
-    button: '测试子菜单',
+    name: '测试子菜单',
+    type: MenuBtnTypeEnum.CLICK,
     sub_button: [{
       name: ''
     }]
