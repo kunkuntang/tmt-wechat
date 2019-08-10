@@ -3,9 +3,10 @@
  * @Author: kuntang@163.com
  * @Date: 2019-08-08 01:33:17
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2019-08-08 22:19:54
+ * @Last Modified time: 2019-08-10 11:34:34
  */
 import { ICommonResult } from "src";
+import { IGenerateSignConfigResult } from "../utils/sign";
 interface IOption {
     appId: string;
     appSecret: string;
@@ -50,9 +51,17 @@ interface IWxUserInfoResultSucc {
     /** 只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。 */
     unionid: string;
 }
+interface IGetJsSDKConfig {
+    accessToken: string;
+    url: string;
+}
+interface IGetJsSDKConfigResult extends IGenerateSignConfigResult {
+    access_token: string;
+}
 export declare class TwtWeb {
     private _appId;
     private _appSecret;
+    private _acToken;
     private _authAcToken;
     private _authExpiresIn;
     private _openid;
@@ -62,6 +71,7 @@ export declare class TwtWeb {
     setupWebConfig(config: Partial<(IOption & {
         authAcToken: string;
         authExpiresIn: number;
+        accessToken: string;
     })>): void;
     /** 通过code换取网页授权access_token */
     getAuthAcToken: (code: string) => Promise<ICommonResult<IAuthAcTokenResultSucc>>;
@@ -69,6 +79,8 @@ export declare class TwtWeb {
     refreshAuthAcToken: (refresh_token: string) => Promise<ICommonResult<IAuthAcTokenResultSucc>>;
     /** 拉取用户信息(需scope为 snsapi_userinfo) */
     getWxUserInfo: (params?: Partial<IGetWxUserInfoParams> | undefined) => Promise<ICommonResult<IWxUserInfoResultSucc>>;
+    /** 获取JsSDK的配置信息 */
+    getJsSDKConfig: (params: IGetJsSDKConfig) => Promise<ICommonResult<IGetJsSDKConfigResult>>;
 }
 export {};
 //# sourceMappingURL=web.d.ts.map

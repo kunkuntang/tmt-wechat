@@ -3,11 +3,12 @@
  * @Author: kuntang@163.com
  * @Date: 2019-08-08 01:33:17 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2019-08-08 22:24:29
+ * @Last Modified time: 2019-08-10 11:34:34
  */
 
-import { get } from "src/utils/http";
+import { get } from "../utils/http";
 import { ICommonResultErr, ICommonResult } from "src";
+import { generateSignConfig, IGenerateSignConfigResult } from "../utils/sign";
 
 interface IOption {
   appId: string;
@@ -57,13 +58,30 @@ interface IWxUserInfoResultSucc {
   unionid: string;
 }
 
+interface IGetJsTicketResult {
+  errcode: number;
+  errmsg: string;
+  ticket: string;
+  expires_in: number;
+}
+
+interface IGetJsSDKConfig {
+  accessToken: string;
+  url: string;
+}
+
+interface IGetJsSDKConfigResult extends IGenerateSignConfigResult {
+  access_token: string;
+}
+
 export class TwtWeb {
   private _appId = '';
   private _appSecret = '';
+  private _acToken = '';
   private _authAcToken = '';
   private _authExpiresIn = 0;
   private _openid = '';
-  
+
   constructor(options?: IOption) {
     if (options) {
       this._appId = options.appId || '';
@@ -83,17 +101,18 @@ export class TwtWeb {
   }
 
   /** 设置Web模块的配置信息 */
-  setupWebConfig(config: Partial<(IOption & { authAcToken: string; authExpiresIn: number;})>) {
-    this._appId = config.appId || '';
-    this._appSecret = config.appSecret || '';
-    this._authAcToken = config.authAcToken || '';
-    this._authExpiresIn = config.authExpiresIn || 0;
+  setupWebConfig(config: Partial<(IOption & { authAcToken: string; authExpiresIn: number; accessToken: string; })>) {
+    this._appId = config.appId || this._appId || '';
+    this._appSecret = config.appSecret || this._appSecret || '';
+    this._authAcToken = config.authAcToken || this._authAcToken || '';
+    this._authExpiresIn = config.authExpiresIn || this._authExpiresIn || 0;
+    this._acToken = config.accessToken || this._acToken || '';
   }
 
   /** 通过code换取网页授权access_token */
   getAuthAcToken = (code: string): Promise<ICommonResult<IAuthAcTokenResultSucc>> => {
     return new Promise(resolve => {
-      if (this._checkValid()) {
+      if (!this._checkValid()) {
         resolve({
           msg: 'web模块配置出错',
           data: null,
@@ -219,6 +238,62 @@ export class TwtWeb {
           })
         }
       })
+    })
+  }
+
+  /** 获取JsSDK的配置信息 */
+  getJsSDKConfig = (params: IGetJsSDKConfig): Promise<ICommonResult<IGetJsSDKConfigResult>> => {
+    return new Promise(resolve => {
+      let access_token = ''
+      if (params) {
+        access_token = params.accessToken ? params.accessToken : this._acToken;
+      }
+      if (!access_token) {
+        resolve({
+          msg: 'web模块配置错误，请先调用 TmtWechat.getAcToken 方法或者传入正确的配置',
+          data: null,
+          code: -9999,
+        })
+        return 0;
+      }
+      const url = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket'
+      get(url, {
+        params: {
+          access_token,
+          type: 'jsapi'
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          const result: IGetJsTicketResult & ICommonResultErr = res.data;
+          if (result.errcode) {
+            resolve({
+              msg: result.errmsg,
+              code: result.errcode,
+              data: null
+            })
+          } else {
+            const jsSDKConfig = generateSignConfig({
+              url: params.url,
+              jsapi_ticket: result.ticket
+            })
+            resolve({
+              msg: '获取成功',
+              data: {
+                access_token: this._acToken,
+                ...jsSDKConfig
+              },
+              code: 0,
+            })
+          }
+        } else {
+          resolve({
+            msg: '网络错误',
+            data: null,
+            code: -9998,
+          })
+        }
+      })
+
     })
   }
 }

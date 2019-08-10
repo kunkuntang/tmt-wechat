@@ -54,6 +54,10 @@ export class TmtWechat {
     constructor(option: IOption) {
         this.appId = option.appId || '';
         this.appSecret = option.appSecret || '';
+        TmtWechat.web.setupWebConfig({
+            appId: option.appId || '',
+            appSecret: option.appSecret || '',
+        })
         this._checkValid()
     }
 
@@ -101,6 +105,9 @@ export class TmtWechat {
                         this.accessToken = result.access_token;
                         this.accessExpire = result.expires_in;
                         TmtWechat.menu.setMenuAccessToken(this.accessToken);
+                        TmtWechat.web.setupWebConfig({
+                            accessToken: this.accessToken
+                        })
                         return resolve({
                             msg,
                             data: result,

@@ -5,11 +5,47 @@ const twt = new TmtWechat({
   appSecret: '784eed575b3236518ba332fb8226a448'
 });
 
-TmtWechat.menu.createMenu({
-  button: [{
-    button: '测试子菜单',
-    sub_button: [{
-      name: ''
+twt.getAcToken().then(res => {
+  console.log('getAcToken result: ', res)
+  TmtWechat.menu.createMenu({
+    button: [{
+      name: '测试子菜单1',
+      sub_button: [{
+        name: '子菜单1',
+        key: 'subMenu1',
+        type: 'click'
+      }, {
+        name: 'baidu',
+        type: 'view',
+        url: 'https://www.baidu.com/'
+      }]
+    }, {
+      name: '测试子菜单2',
+      type: 'view',
+      url: 'https://www.jd.com/'
     }]
-  }]
+  }).then(res => {
+    console.log('createMenu result: ', res)
+  })
 })
+
+// TmtWechat.menu.createMenu({
+//   button: [{
+//     name: '测试子菜单1',
+//     sub_button: [{
+//       name: '子菜单1',
+//       key: 'subMenu1',
+//       type: 'click'
+//     }, {
+//       name: 'baidu',
+//       type: 'view',
+//       url: 'https://www.baidu.com/'
+//     }]
+//   }, {
+//     name: '测试子菜单2',
+//     type: 'view',
+//     url: 'https://www.jd.com/'
+//   }]
+// }).then(res => {
+//   console.log('createMenu result: ', res)
+// })

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+</head>
+
+<body>
+  <a id="a1" href=""><button type="button">weichat common login</button></a>
+  <a id="a2" href=""><button type="button">weichat info login</button></a>
+  <div id="showHasCodeDiv" style="display: none;">
+    <div>already has code, you can get the userInfo</div>
+    <button onclick="getUserInfo()">get userInfo</button>
+  </div>
+  <div>
+    <button onclick="setUpJsSDK()">setup JsSDK</button>
+  </div>
+</body>
+<script>
+  var APPID = 'wx7eb04cc84eb21896'
+  var REDIRECT_URI = 'http://weixin.lenkuntang.cn'
+  var SCOPE = 'snsapi_base'
+  var STATE = ''
+  var url1 = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + APPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=' + SCOPE + '&state=' + STATE + '#wechat_redirect'
+
+  var link_btn1 = document.getElementById('a1');
+  link_btn1.href = url1
+
+  var link_btn2 = document.getElementById('a2');
+  SCOPE = 'snsapi_userinfo';
+  var url2 = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + APPID + '&redirect_uri=' + REDIRECT_URI + '&response_type=code&scope=' + SCOPE + '&state=' + STATE + '#wechat_redirect'
+  link_btn2.href = url2
+
+  var queryObj = {}
+  if (window.location.search.split('?').length > 1) {
+    window.location.search.split('?')[1].split('&').forEach(item => {
+      queryObj[item.split('=')[0]] = item.split('=')[1]
+    })
+    console.log(queryObj)
+  }
+
+  if (queryObj.code) {
+    document.getElementById('showHasCodeDiv').style.display = 'block';
+  }
+
+  function getUserInfo() {
+    if (queryObj.code) {
+      axios.get('/getUserInfo', {
+        params: {
+          code: queryObj.code
+        }
+      }).then(res => {
+        console.log('res', res.data)
+      })
+
+    }
+  }
+
+  function setUpJsSDK() {
+    axios.post('/getJsSDKConfig', {
+      url: window.location.href
+    }).then(res => {
+      console.log('getJsSDKConfig res', res.data);
+      const config = res.data.data
+      wx.config({
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: 'wx7eb04cc84eb21896', // 必填，公众号的唯一标识
+        timestamp: config.timestamp, // 必填，生成签名的时间戳
+        nonceStr: config.nonceStr, // 必填，生成签名的随机串
+        signature: config.signature, // 必填，签名
+        jsApiList: ['updateAppMessageShareData'] // 必填，需要使用的JS接口列表
+      });
+    })
+  }
+</script>
+
+</html>

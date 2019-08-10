@@ -3,7 +3,7 @@
  * @Author: kuntang@163.com
  * @Date: 2019-08-08 01:31:17
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2019-08-08 09:56:08
+ * @Last Modified time: 2019-08-10 13:08:58
  */
 import { ICommonResult, ICommonResultErr } from "src";
 interface IOption {
@@ -77,9 +77,10 @@ export declare enum MenuBtnTypeEnum {
      */
     VIEWLIMITED = "view_limited"
 }
+declare type TMenuBtnTypeEnum = 'click' | 'view' | 'scancode_push' | 'scancode_waitmsg' | 'pic_sysphoto' | 'pic_photo_or_album' | 'pic_weixin' | 'location_select' | 'media_id' | 'view_limited';
 interface IMenuItemOptions {
     /** 菜单的响应动作类型，view表示网页类型，click表示点击类型，miniprogram表示小程序类型 */
-    type: MenuBtnTypeEnum;
+    type: MenuBtnTypeEnum | TMenuBtnTypeEnum;
     /** 菜单标题，不超过16个字节，子菜单不超过60个字节 */
     name: string;
     /** click等点击类型必须，菜单KEY值，用于消息接口推送，不超过128字节 */
@@ -100,12 +101,15 @@ interface ISubMenuOptions {
 interface IMenuOptions {
     button: Array<ISubMenuOptions | IMenuItemOptions>;
 }
+interface ICreateMenuResult extends ICommonResultErr {
+    access_token: string;
+}
 export declare class TwtMenu {
     private _accessToken;
     constructor(options?: IOption);
     private _checkValid;
     setMenuAccessToken(accessToken: string): void;
-    createMenu(menuOptions: IMenuOptions): Promise<ICommonResult<ICommonResultErr>>;
+    createMenu(menuOptions: IMenuOptions): Promise<ICommonResult<ICreateMenuResult>>;
 }
 export {};
 //# sourceMappingURL=menu.d.ts.map

@@ -4,7 +4,7 @@
  * @Author: kuntang@163.com
  * @Date: 2019-08-08 01:31:17
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2019-08-08 09:56:08
+ * @Last Modified time: 2019-08-10 13:08:58
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = require("../utils/http");
@@ -114,14 +114,14 @@ class TwtMenu {
                         return resolve({
                             msg: '创建成功！',
                             code: 0,
-                            data: result,
+                            data: Object.assign({ access_token: this._accessToken }, result),
                         });
                     }
                     else {
                         return resolve({
-                            msg: '创建出错！',
+                            msg: result.errmsg,
                             code: result.errcode,
-                            data: result,
+                            data: null,
                         });
                     }
                 }
