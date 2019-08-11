@@ -19,6 +19,12 @@ export interface ICommonResult<T> {
     code?: number;
     data?: T | null;
 }
+interface ITwtConfig {
+    appId: string;
+    appSecret: string;
+    accessToken: string;
+    accessExpire: number;
+}
 export declare class TmtWechat {
     readonly appId: string;
     readonly appSecret: string;
@@ -28,6 +34,7 @@ export declare class TmtWechat {
     static web: TwtWeb;
     constructor(option: IOption);
     private _checkValid;
+    getConfig(name?: keyof ITwtConfig): (ITwtConfig | null | string | number);
     /** 获取用户的AccessTooken */
     getAcToken: () => Promise<ICommonResult<IAcTokenResultSucc>>;
 }

@@ -28,6 +28,13 @@ export interface ICommonResult<T> {
     data?: T | null,
 }
 
+interface ITwtConfig {
+    appId: string;
+    appSecret: string;
+    accessToken: string;
+    accessExpire: number;
+}
+
 enum AcTokenEnum {
     SYSBUSY = -1,
     _SYSBUSY = '系统繁忙，此时请开发者稍候再试',
@@ -70,6 +77,20 @@ export class TmtWechat {
             return false;
         }
         return true
+    }
+
+    getConfig(name?: keyof ITwtConfig): (ITwtConfig | null | string | number) {
+        const twtConfig = {
+            appId: this.appId,
+            appSecret: this.appSecret,
+            accessToken: this.accessToken,
+            accessExpire: this.accessExpire
+        }
+        if (name) {
+            return twtConfig[name] || null;
+        } else {
+            return twtConfig
+        }
     }
 
     /** 获取用户的AccessTooken */

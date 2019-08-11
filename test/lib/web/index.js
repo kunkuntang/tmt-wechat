@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const koaBody = require('koa-body');
-const TmtWechat = require('../../');
+const TmtWechat = require('../../../');
 const fs = require('fs');
 const path = require('path');
 

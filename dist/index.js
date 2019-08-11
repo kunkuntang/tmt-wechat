@@ -95,6 +95,20 @@ class TmtWechat {
         }
         return true;
     }
+    getConfig(name) {
+        const twtConfig = {
+            appId: this.appId,
+            appSecret: this.appSecret,
+            accessToken: this.accessToken,
+            accessExpire: this.accessExpire
+        };
+        if (name) {
+            return twtConfig[name] || null;
+        }
+        else {
+            return twtConfig;
+        }
+    }
 }
 TmtWechat.menu = new menu_1.TwtMenu();
 TmtWechat.web = new web_1.TwtWeb();
